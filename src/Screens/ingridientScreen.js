@@ -1,41 +1,28 @@
 import React, {useEffect, useState} from 'react'
-import { SEARCH_BY_INGRIDIENT } from '../config'
+import View from '../components/Detail/View'
+import { COCTAIL_BY_ID } from '../config'
 
-export default function IngridientScreen(props) {
-    const [ing, setIng] = useState(null)
-
+export default function DetailScreen(props) {
+    const [fullInfo, setFullInfo]=useState(null)
     useEffect(()=>{
-        let param = props.match.params.name
-        getIngridient(param)
+        let param = props.match.params.id
+        getDetailInfo(param)
     },[])
-
-    const getIngridient = async(prm)=>{
-        let resp = await fetch(SEARCH_BY_INGRIDIENT+prm)
+    const getDetailInfo = async(prm)=>{
+        let resp = await fetch(COCTAIL_BY_ID + prm)
         let req = await resp.json()
-        setIng(req ? req.ingredients[0] :null)
-        
+        console.log(req.drinks)
+        setFullInfo(req.drinks)
     }
 
     return (
         <div>
-        <span onClick={
-            props.history.goBack
-        }>{'<--'}</span>
-            {ing ? 
-                <div>
-                    <span>
-                        <input type ="checkBox"
-                        defaultChecked={
-                            ing.strAlcohol == 'Yes' ?
-                            true:false}
-                            disabled
-                        />
-                    </span>
-                    <h1>{ing.strIngredient}</h1>
-                    <b><i>{ing.strIngredient}</i></b>
-                </div>
-                :<h1>Result undefined</h1>
-            }
+            <span onClick={
+                props.history.goBack
+            }>{'<--'}</span>
+            <View
+                info = {fullInfo}
+            />
         </div>
     )
 }
